@@ -1,9 +1,13 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 int main()
 {
-    auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project");
-    window.setFramerateLimit(144);
+    auto window = sf::RenderWindow(sf::VideoMode({1280, 720}), "CMake SFML Project");
+    window.setFramerateLimit(120);
+
+    const sf::Font font("resources/Gidole-Regular.ttf");
+    sf::Text text(font, "Hello SFML", 50);
 
     while (window.isOpen())
     {
@@ -14,8 +18,8 @@ int main()
                 window.close();
             }
         }
-
         window.clear();
+        window.draw(text);
         window.display();
     }
 }
