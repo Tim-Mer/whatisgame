@@ -1,25 +1,26 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+#include "config.hpp"
 
 int main()
 {
-    auto window = sf::RenderWindow(sf::VideoMode({1280, 720}), "CMake SFML Project");
+    sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), WINDOW_NAME, sf::State::Windowed);
     window.setFramerateLimit(120);
 
-    const sf::Font font("resources/Gidole-Regular.ttf");
-    sf::Text text(font, "Hello SFML", 50);
+    
+    sf::Text text(GAME_FONT, "Hello world!", 50);
 
-    while (window.isOpen())
-    {
-        while (const std::optional event = window.pollEvent())
-        {
-            if (event->is<sf::Event::Closed>())
-            {
+    sf::Texture texture("res/Terrain/Water_Background_color.png", false, sf::IntRect({0, 0}, {64, 64}));
+    sf::Sprite sprite(texture);
+    sprite.setTextureRect(sf::IntRect({100, 100}, {64, 64}));
+
+    while (window.isOpen()) {
+        while (const std::optional event = window.pollEvent()) {
+            if (event->is<sf::Event::Closed>()) {
                 window.close();
             }
         }
         window.clear();
         window.draw(text);
+        window.draw(sprite);
         window.display();
     }
 }
