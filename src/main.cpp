@@ -10,7 +10,7 @@ int main()
 
     sf::Texture texture("res/Terrain/Water_Background_color.png", false, sf::IntRect({0, 0}, {64, 64}));
     sf::Sprite sprite(texture);
-    sprite.setTextureRect(sf::IntRect({100, 100}, {64, 64}));
+    //sprite.setTextureRect(sf::IntRect({100, 100}, {64, 64}));
 
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
