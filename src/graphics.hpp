@@ -1,92 +1,67 @@
 #pragma once
 #include "config.hpp"
 
-class MyEntity : public sf::Drawable, public sf::Transformable
+class GridMap : public sf::Drawable
 {
 public:
     // add functions to play with the entity's geometry / colors / texturing...
-
-private:
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const override
-    {
-        // apply the entity's transform -- combine it with the one that was passed by the caller
-        states.transform *= getTransform(); // getTransform() is defined by sf::Transformable
-
-        // apply the texture
-        states.texture = &m_texture;
-
-        // you may also override states.shader or states.blendMode if you want
-
-        // draw the vertex array
-        target.draw(m_vertices, states);
+    void load(int width, int height) {
+        for (size_t i=0; i<height; i++) {
+            std::vector<sf::RectangleShape> row;
+            for (size_t j=0; j<width; j++) {
+                sf::RectangleShape cb({10.f, 10.f});
+                if (j>(width/2)) {
+                    cb.setFillColor(PURPLE);
+                } else {
+                    cb.setFillColor(ORANGE);
+                }
+                cb.setPosition({(float)j*10, (float)i*10});
+                if (ENABLE_GRID) {
+                    cb.setOutlineThickness(1.f);
+                    cb.setOutlineColor(BLACK);
+                }
+                row.push_back(cb);
+            }
+            boxes.push_back(row);
+        }
     }
 
-    sf::VertexArray m_vertices;
-    sf::Texture     m_texture;
-};
+private:
+    std::vector<std::vector<sf::RectangleShape>> boxes;
 
-class TileMap : public sf::Drawable, public sf::Transformable
-{
-public:
-    bool load(const std::filesystem::path& tileset, sf::Vector2u tileSize, const int* tiles, unsigned int width, unsigned int height)
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override
     {
-        // load the tileset texture
-        if (!m_tileset.loadFromFile(tileset))
-            return false;
-
-        // resize the vertex array to fit the level size
-        m_vertices.setPrimitiveType(sf::PrimitiveType::Triangles);
-        m_vertices.resize(width * height * 6);
-
-        // populate the vertex array, with two triangles per tile
-        for (unsigned int i = 0; i < width; ++i)
-        {
-            for (unsigned int j = 0; j < height; ++j)
-            {
-                // get the current tile number
-                const int tileNumber = tiles[i + j * width];
-
-                // find its position in the tileset texture
-                const int tu = tileNumber % (m_tileset.getSize().x / tileSize.x);
-                const int tv = tileNumber / (m_tileset.getSize().x / tileSize.x);
-
-                // get a pointer to the triangles' vertices of the current tile
-                sf::Vertex* triangles = &m_vertices[(i + j * width) * 6];
-
-                // define the 6 corners of the two triangles
-                triangles[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);
-                triangles[1].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);
-                triangles[2].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);
-                triangles[3].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);
-                triangles[4].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);
-                triangles[5].position = sf::Vector2f((i + 1) * tileSize.x, (j + 1) * tileSize.y);
-
-                // define the 6 matching texture coordinates
-                triangles[0].texCoords = sf::Vector2f(tu * tileSize.x, tv * tileSize.y);
-                triangles[1].texCoords = sf::Vector2f((tu + 1) * tileSize.x, tv * tileSize.y);
-                triangles[2].texCoords = sf::Vector2f(tu * tileSize.x, (tv + 1) * tileSize.y);
-                triangles[3].texCoords = sf::Vector2f(tu * tileSize.x, (tv + 1) * tileSize.y);
-                triangles[4].texCoords = sf::Vector2f((tu + 1) * tileSize.x, tv * tileSize.y);
-                triangles[5].texCoords = sf::Vector2f((tu + 1) * tileSize.x, (tv + 1) * tileSize.y);
+        for (const auto& row : boxes) {
+            for (const auto& rect : row) {
+                target.draw(rect, states);
             }
         }
+    }
+};
 
-        return true;
+class Balls : public sf::Drawable, public sf::Transformable
+{
+public:
+    // add functions to play with the entity's geometry / colors / texturing...
+    void load(int width, int height) {//TODO: Change to be Vector2f locations for the starting positions
+        c1.setFillColor(PURPLE);
+        c2.setFillColor(ORANGE);
+
+        c1.setRadius(4.f);
+        c2.setRadius(4.f);
+
+        c1.setOutlineThickness(1.f);
+        c2.setOutlineThickness(1.f);
+        c1.setOutlineColor(BLACK);
+        c2.setOutlineColor(BLACK);
     }
 
 private:
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const override
-    {
-        // apply the transform
-        states.transform *= getTransform();
+    sf::CircleShape c1;
+    sf::CircleShape c2;
 
-        // apply the tileset texture
-        states.texture = &m_tileset;
-
-        // draw the vertex array
-        target.draw(m_vertices, states);
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
+        target.draw(c1, states);
+        target.draw(c2, states);
     }
-
-    sf::VertexArray m_vertices;
-    sf::Texture     m_tileset;
 };
