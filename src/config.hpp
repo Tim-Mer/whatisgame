@@ -6,8 +6,8 @@
 #include "graphics.hpp"
 
 // Window constraints
-const int WINDOW_WIDTH=1280;
-const int WINDOW_HEIGHT=720;
+const int WINDOW_WIDTH=320;
+const int WINDOW_HEIGHT=320;
 const sf::String WINDOW_NAME = "whatisgame";
 
 // Game styles
