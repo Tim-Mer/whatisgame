@@ -8,7 +8,7 @@ int main()
     
     sf::Text text(GAME_FONT, "Hello world!", 50);
 
-    sf::CircleShape c1(9.f);
+    sf::CircleShape c1(4.f);
     c1.setFillColor(PURPLE);
     c1.setOutlineThickness(1.f);
     c1.setOutlineColor(BLACK);
@@ -26,6 +26,10 @@ int main()
                 cb.setFillColor(ORANGE);
             }
             cb.setPosition({(float)j*10, (float)i*10});
+            if (ENABLE_GRID) {
+                cb.setOutlineThickness(1.f);
+                cb.setOutlineColor(BLACK);
+            }
             row.push_back(cb);
         }
         boxes.push_back(row);
