@@ -10,10 +10,13 @@ int main()
     sf::Text text(GAME_FONT, "Hello world!", 50);
 
     Balls ball;
-    ball.load(WINDOW_WIDTH/10, WINDOW_HEIGHT/10);
-    
+    ball.load({0.f, 0.f}, {WINDOW_WIDTH-1.f, WINDOW_HEIGHT-1.f});
+
     GridMap grid;
     grid.load(WINDOW_WIDTH/10, WINDOW_HEIGHT/10);
+
+    Paddles paddle;
+    paddle.load();
 
     while(window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
@@ -21,12 +24,21 @@ int main()
                 window.close();
             }
         }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+            window.close();
+        }
+
         window.clear();
         //window.draw(text);
         
         window.draw(grid);
-        window.draw(c1);
-        c1.move({1.f, 1.f});
+        window.draw(ball);
+        window.draw(paddle);
+        //c1.move({1.f, 1.f});
+        
+        paddle.move();
+        ball.move();
         
         window.display();
     }

@@ -4,13 +4,12 @@
 class GridMap : public sf::Drawable
 {
 public:
-    // add functions to play with the entity's geometry / colors / texturing...
     void load(int width, int height) {
         for (size_t i=0; i<height; i++) {
             std::vector<sf::RectangleShape> row;
             for (size_t j=0; j<width; j++) {
                 sf::RectangleShape cb({10.f, 10.f});
-                if (j>(width/2)) {
+                if (j>(width/2)-1) {
                     cb.setFillColor(PURPLE);
                 } else {
                     cb.setFillColor(ORANGE);
@@ -28,6 +27,7 @@ public:
 
 private:
     std::vector<std::vector<sf::RectangleShape>> boxes;
+    sf::RectangleShape boundary;
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override
     {
@@ -43,7 +43,7 @@ class Balls : public sf::Drawable, public sf::Transformable
 {
 public:
     // add functions to play with the entity's geometry / colors / texturing...
-    void load(int width, int height) {//TODO: Change to be Vector2f locations for the starting positions
+    void load(sf::Vector2f p1, sf::Vector2f p2) {//TODO: Change to be Vector2f locations for the starting positions
         c1.setFillColor(PURPLE);
         c2.setFillColor(ORANGE);
 
@@ -52,8 +52,17 @@ public:
 
         c1.setOutlineThickness(1.f);
         c2.setOutlineThickness(1.f);
+
         c1.setOutlineColor(BLACK);
-        c2.setOutlineColor(BLACK);
+        c2.setOutlineColor(WHITE);
+
+        c1.setPosition(p1);
+        c2.setPosition(p2);
+    }
+
+    void move() {
+        c1.move({1.f, 1.f});
+        c2.move({-1.f, -1.f});
     }
 
 private:
@@ -63,5 +72,29 @@ private:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         target.draw(c1, states);
         target.draw(c2, states);
+    }
+};
+
+
+class Paddles : public sf::Drawable, public sf::Transformable
+{
+public:
+    // add functions to play with the entity's geometry / colors / texturing...
+    void load() {//TODO: Change to be Vector2f locations for the starting positions
+        p1.setSize({5.f, 30.f});
+        p1.setFillColor(PURPLE);
+        p1.setPosition({2.f, 1.f});
+    }
+
+    void move() {
+    }
+
+private:
+    sf::RectangleShape p1;
+    //sf::RectangleShape p2;
+
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
+        target.draw(p1, states);
+        //target.draw(p2, states);
     }
 };
