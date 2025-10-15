@@ -28,18 +28,16 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
             window.close();
         }
-
+// CLEAR
         window.clear();
-        //window.draw(text);
-        
+// DRAW     
         window.draw(grid);
         window.draw(ball);
         window.draw(paddle);
-        //c1.move({1.f, 1.f});
-        
+// MOVE        
         paddle.move();
         ball.move();
-        
+// DISPLAY        
         window.display();
     }
 }

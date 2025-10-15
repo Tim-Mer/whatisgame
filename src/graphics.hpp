@@ -42,8 +42,7 @@ private:
 class Balls : public sf::Drawable, public sf::Transformable
 {
 public:
-    // add functions to play with the entity's geometry / colors / texturing...
-    void load(sf::Vector2f p1, sf::Vector2f p2) {//TODO: Change to be Vector2f locations for the starting positions
+    void load(sf::Vector2f p1, sf::Vector2f p2) {
         c1.setFillColor(PURPLE);
         c2.setFillColor(ORANGE);
 
@@ -79,11 +78,15 @@ private:
 class Paddles : public sf::Drawable, public sf::Transformable
 {
 public:
-    // add functions to play with the entity's geometry / colors / texturing...
-    void load() {//TODO: Change to be Vector2f locations for the starting positions
+    void load() {
         p1.setSize({5.f, 30.f});
+        p2.setSize({5.f, 30.f});
+
         p1.setFillColor(PURPLE);
+        p2.setFillColor(ORANGE);
+
         p1.setPosition({2.f, 1.f});
+        p2.setPosition({WINDOW_WIDTH - 8.f, 1.f});
     }
 
     void move() {
@@ -91,10 +94,10 @@ public:
 
 private:
     sf::RectangleShape p1;
-    //sf::RectangleShape p2;
+    sf::RectangleShape p2;
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         target.draw(p1, states);
-        //target.draw(p2, states);
+        target.draw(p2, states);
     }
 };
