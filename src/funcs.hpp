@@ -101,16 +101,3 @@ private:
         target.draw(p2, states);
     }
 };
-
-
-class Player : public sf::Drawable 
-{
-public:
-    void load(){
-        paddle.load();
-    }
-private:
-    int score;
-    Paddles paddle;
-
-};
