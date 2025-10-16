@@ -39,65 +39,72 @@ private:
     }
 };
 
-class Balls : public sf::Drawable, public sf::Transformable
+class Ball : public sf::Drawable, public sf::Transformable
 {
 public:
-    void load(sf::Vector2f p1, sf::Vector2f p2) {
-        c1.setFillColor(PURPLE);
-        c2.setFillColor(ORANGE);
-
-        c1.setRadius(4.f);
-        c2.setRadius(4.f);
-
-        c1.setOutlineThickness(1.f);
-        c2.setOutlineThickness(1.f);
-
-        c1.setOutlineColor(BLACK);
-        c2.setOutlineColor(WHITE);
-
-        c1.setPosition(p1);
-        c2.setPosition(p2);
+    void load(sf::Vector2f start_pos, sf::Color pl_col, sf::Vector2f init_vel) {
+        p_ball.setFillColor(pl_col);
+        p_ball.setRadius(4.f);
+        p_ball.setOutlineThickness(1.f);
+        p_ball.setOutlineColor(BLACK);
+        p_ball.setPosition(start_pos);
+        p_ball.move(init_vel);
     }
 
-    void move() {
-        c1.move({1.f, 1.f});
-        c2.move({-1.f, -1.f});
+    void move(sf::Vector2f vec) {
+        vel+=vec;
+        p_ball.move(vel);
     }
 
 private:
-    sf::CircleShape c1;
-    sf::CircleShape c2;
+    sf::CircleShape p_ball;
+    sf::Vector2f vel;
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
-        target.draw(c1, states);
-        target.draw(c2, states);
+        target.draw(p_ball, states);
     }
 };
 
 
-class Paddles : public sf::Drawable, public sf::Transformable
+class Paddle : public sf::Drawable, public sf::Transformable
 {
 public:
-    void load() {
-        p1.setSize({5.f, 30.f});
-        p2.setSize({5.f, 30.f});
-
-        p1.setFillColor(PURPLE);
-        p2.setFillColor(ORANGE);
-
-        p1.setPosition({2.f, 1.f});
-        p2.setPosition({WINDOW_WIDTH - 8.f, 1.f});
+    void load(sf::Vector2f start_pos, sf::Color pl_col) {
+        paddle.setSize({5.f, 30.f});
+        paddle.setFillColor(pl_col);
+        paddle.setPosition(start_pos);
     }
 
     void move() {
     }
 
 private:
-    sf::RectangleShape p1;
-    sf::RectangleShape p2;
+    sf::RectangleShape paddle;
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
-        target.draw(p1, states);
-        target.draw(p2, states);
+        target.draw(paddle, states);
+    }
+};
+
+
+class Player : public sf::Drawable 
+{
+public:
+    void load(sf::Vector2f start_pos, sf::Color pl_col, sf::Vector2f init_vel){
+        p_paddle.load(start_pos, pl_col);
+        p_ball.load(start_pos, pl_col, init_vel);
+    }
+
+    void move() {
+        p_ball.move({1.f, 1.f});
+    }
+private:
+    int score;
+    Paddle p_paddle;
+    Ball p_ball;
+
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
+        target.draw(p_paddle, states);
+        target.draw(p_ball, states);
     }
 };

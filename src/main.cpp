@@ -1,5 +1,5 @@
 #include "config.hpp"
-#include "graphics.hpp"
+#include "funcs.hpp"
 
 int main()
 {
@@ -9,14 +9,18 @@ int main()
     
     sf::Text text(GAME_FONT, "Hello world!", 50);
 
-    Balls ball;
-    ball.load({0.f, 0.f}, {WINDOW_WIDTH-1.f, WINDOW_HEIGHT-1.f});
+    //Balls ball;
+    //ball.load({0.f, 0.f}, {WINDOW_WIDTH-1.f, WINDOW_HEIGHT-1.f});
 
     GridMap grid;
     grid.load(WINDOW_WIDTH/10, WINDOW_HEIGHT/10);
 
-    Paddles paddle;
-    paddle.load();
+    //Paddles paddle;
+    //paddle.load();
+
+    Player p1, p2;
+    p1.load({1.f, 1.f}, PURPLE, {1.f, -1.f});
+    p2.load({WINDOW_WIDTH - 8.f, 1.f}, ORANGE, {-1.f, -1.f});
 
     while(window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
@@ -32,11 +36,11 @@ int main()
         window.clear();
 // DRAW     
         window.draw(grid);
-        window.draw(ball);
-        window.draw(paddle);
+        window.draw(p1);
+        window.draw(p2);
 // MOVE        
-        paddle.move();
-        ball.move();
+        p1.move();
+        p2.move();
 // DISPLAY        
         window.display();
     }
