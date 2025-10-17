@@ -3,6 +3,7 @@
 // Includes
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <iostream>
 
 // Window constraints
 const int WINDOW_WIDTH=720;

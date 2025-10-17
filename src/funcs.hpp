@@ -90,7 +90,7 @@ private:
 class Player : public sf::Drawable 
 {
 public:
-    void load(sf::Vector2f start_pos, sf::Color pl_col, sf::Vector2f init_vel){
+    Player(sf::Vector2f start_pos, sf::Color pl_col, sf::Vector2f init_vel){
         p_paddle.load(start_pos, pl_col);
         p_ball.load(start_pos, pl_col, init_vel);
     }
