@@ -6,7 +6,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), WINDOW_NAME, sf::State::Windowed);
     window.setFramerateLimit(120);
     
-    sf::Text text(GAME_FONT, "Hello world!", 50);
+    //sf::Text text(GAME_FONT, "Hello world!", 50);
 
     GridMap grid;
     grid.load(WINDOW_WIDTH/10, WINDOW_HEIGHT/10);
