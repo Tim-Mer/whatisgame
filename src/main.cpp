@@ -7,7 +7,6 @@ int main()
     window.setFramerateLimit(120);
     
     sf::Text text(GAME_FONT, "Hello world!", 50);
-    //{WINDOW_WIDTH-1.f, WINDOW_HEIGHT-1.f}
 
     GridMap grid;
     grid.load(WINDOW_WIDTH/10, WINDOW_HEIGHT/10);
@@ -20,9 +19,6 @@ int main()
     players.push_back(p);
 
     std::cout << "Num Players: " << players.size() << std::endl;
-
-    //players[0]->load({1.f, 1.f}, PURPLE, {1.f, -1.f});
-    //players[1]->load({WINDOW_WIDTH - 8.f, 1.f}, ORANGE, {-1.f, -1.f});
 
     while(window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
