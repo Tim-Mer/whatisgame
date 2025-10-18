@@ -35,6 +35,8 @@ int main()
         for (size_t i=0; i<players.size(); i++) {
 //DRAW
             window.draw(*players[i]);
+//COLLIDE
+            players[i]->collide(grid);
 //MOVE
             players[i]->move();
         }

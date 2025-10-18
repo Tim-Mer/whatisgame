@@ -18,5 +18,8 @@ const sf::Color PURPLE(128, 0, 128);
 const sf::Color BLACK(0, 0, 0);
 const sf::Color WHITE(255, 255, 255);
 
+// Game Settings
+const int MAX_SPEED = 5;
+
 // Debug
 const bool ENABLE_GRID = false;
