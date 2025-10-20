@@ -1,18 +1,17 @@
 #include "funcs.hpp"
 
-void GridMap::load(int width, int height) {
+void GridMap::load(sf::RectangleShape in_box, sf::Color p_col, sf::Vertex start_point) {
     //Load Box
-    box.setSize({(float) width, (float) height});
+    box = in_box;
+    int x = box.getSize().x + start_point.position.x;
+    int y = box.getSize().y + start_point.position.y;
+    //box.setSize({(float) width, (float) height});
     //Load grid
-    for (size_t i=0; i<height; i++) {
+    for (size_t i=start_point.position.y; i<y; i++) {
             std::vector<sf::RectangleShape> row;
-            for (size_t j=0; j<width; j++) {
+            for (size_t j=start_point.position.x; j<x; j++) {
                 sf::RectangleShape cb({10.f, 10.f});
-                if (j>(width/2)-1) {
-                    cb.setFillColor(PURPLE);
-                } else {
-                    cb.setFillColor(ORANGE);
-                }
+                cb.setFillColor(p_col);
                 cb.setPosition({(float)j*10, (float)i*10});
                 if (ENABLE_GRID) {
                     cb.setOutlineThickness(1.f);
@@ -60,9 +59,20 @@ void Paddle::load(sf::Vector2f start_pos, sf::Color pl_col) {
     paddle.setPosition(start_pos);
 }
 
-Player::Player(sf::Vector2f start_pos, sf::Color pl_col, sf::Vector2f init_vel){
+Player::Player(sf::RectangleShape player_area, sf::Color pl_col, sf::Vertex corner, bool tright_fleft) {
+    /*
+    player area: Total area that is in the players control including further expanded area
+    pl_col: Player colour
+    corner: The top left corner of the players area
+    tright_fleft: True for paddle and ball starting on the right, false for left
+    
+    - Need to calculate and send the starting position for both paddles
+    - Calculate the initial velocity of each ball (Maybe randomly towards the middle or close enough)
+    - Send the entire player area to the p_grid to let it load the grid
+    */
     p_paddle.load(start_pos, pl_col);
     p_ball.load(start_pos, pl_col, init_vel);
+    p_grid.load((sf::RectangleShape) start_pos, pl_col, start_pos);
 }
 
 void Player::move() {

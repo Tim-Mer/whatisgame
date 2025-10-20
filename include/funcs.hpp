@@ -4,13 +4,12 @@
 class GridMap : public sf::Drawable
 {
 public:
-    void load(int width, int height);
+    void load(sf::RectangleShape in_box, sf::Color p_col, sf::Vertex start_point);
     bool edge_collision(sf::CircleShape ball);
 
 private:
     sf::RectangleShape box;
     std::vector<std::vector<sf::RectangleShape>> boxes;
-    sf::RectangleShape boundary;
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override
     {
@@ -58,7 +57,7 @@ private:
 class Player : public sf::Drawable 
 {
 public:
-    Player(sf::Vector2f start_pos, sf::Color pl_col, sf::Vector2f init_vel);
+    Player(sf::RectangleShape player_area, sf::Color pl_col, sf::Vertex corner, bool tright_fleft);
     void move();
     void collide(GridMap map);
 
@@ -66,6 +65,7 @@ private:
     int score;
     Paddle p_paddle;
     Ball p_ball;
+    GridMap p_grid;
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         target.draw(p_paddle, states);

@@ -8,8 +8,8 @@ int main()
     
     //sf::Text text(GAME_FONT, "Hello world!", 50);
 
-    GridMap grid;
-    grid.load(WINDOW_WIDTH/10, WINDOW_HEIGHT/10);
+    //GridMap grid;
+    //grid.load(WINDOW_WIDTH/10, WINDOW_HEIGHT/10);
 // Adding players
     std::vector<Player*> players;
     Player *p;
