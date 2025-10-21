@@ -13,9 +13,11 @@ int main()
 // Adding players
     std::vector<Player*> players;
     Player *p;
-    p = new Player({1.f, 1.f}, PURPLE, {1.f, -1.f});
+    sf::RectangleShape player_area({WINDOW_WIDTH/20, WINDOW_HEIGHT/10});
+    p = new Player(player_area, PURPLE, ORANGE, {0.f, 0.f}, false);
     players.push_back(p);
-    p = new Player({WINDOW_WIDTH - 8.f, 1.f}, ORANGE, {-1.f, -1.f});
+    p = new Player(player_area, ORANGE, PURPLE, {(float) WINDOW_WIDTH/20, 0.f}, true);
+    //p = new Player({WINDOW_WIDTH - 8.f, 1.f}, ORANGE, {-1.f, -1.f});
     players.push_back(p);
 
     std::cout << "Num Players: " << players.size() << std::endl;
@@ -31,12 +33,12 @@ int main()
         }
 // CLEAR
         window.clear();
-        window.draw(grid);
+        //window.draw(grid);
         for (size_t i=0; i<players.size(); i++) {
 //DRAW
             window.draw(*players[i]);
 //COLLIDE
-            players[i]->collide(grid);
+            //players[i]->collide(grid);
 //MOVE
             players[i]->move();
         }
