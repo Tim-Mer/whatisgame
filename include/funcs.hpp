@@ -6,6 +6,7 @@ class GridMap : public sf::Drawable
 public:
     void load(sf::RectangleShape in_box, sf::Color p_col, sf::Vector2f start_point);
     bool edge_collision(sf::CircleShape ball);
+    int getNumBoxes();
 
 private:
     std::vector<std::vector<sf::RectangleShape>> boxes;
@@ -59,6 +60,7 @@ public:
     Player(sf::RectangleShape player_area, sf::Color pl_col, sf::Color grid_colour, sf::Vector2f top_corner, bool player_right);
     void move();
     void collide(GridMap map);
+    sf::Text getScore();
 
 private:
     int score = 0;
@@ -67,8 +69,8 @@ private:
     GridMap p_grid;
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
+        target.draw(p_grid, states);
         target.draw(p_paddle, states);
         target.draw(p_ball, states);
-        target.draw(p_grid, states);
     }
 };

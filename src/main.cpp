@@ -6,10 +6,6 @@ int main()
     sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), WINDOW_NAME, sf::State::Windowed);
     window.setFramerateLimit(120);
     
-    //sf::Text text(GAME_FONT, "Hello world!", 50);
-
-    //GridMap grid;
-    //grid.load(WINDOW_WIDTH/10, WINDOW_HEIGHT/10);
 // Adding players
     std::vector<Player*> players;
     Player *p;
@@ -17,8 +13,8 @@ int main()
     p = new Player(player_area, PURPLE, ORANGE, {0.f, 0.f}, false);
     players.push_back(p);
     p = new Player(player_area, ORANGE, PURPLE, {(float) WINDOW_WIDTH/20, 0.f}, true);
-    //p = new Player({WINDOW_WIDTH - 8.f, 1.f}, ORANGE, {-1.f, -1.f});
     players.push_back(p);
+    p = NULL;
 
     std::cout << "Num Players: " << players.size() << std::endl;
 
