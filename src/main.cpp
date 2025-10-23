@@ -29,12 +29,12 @@ int main()
         }
 // CLEAR
         window.clear();
-        //window.draw(grid);
+
         for (size_t i=0; i<players.size(); i++) {
 //DRAW
             window.draw(*players[i]);
 //COLLIDE
-            //players[i]->collide(grid);
+            players[i]->collide();
 //MOVE
             players[i]->move();
         }

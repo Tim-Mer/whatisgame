@@ -6,9 +6,19 @@ void GridMap::load(sf::RectangleShape in_box, sf::Color p_col, sf::Vector2f star
     p_col: Players Colour
     start_point: The top left corner of the players area
 */
+//Setting player_area
+    player_area.setPointCount(4);
+    player_area.setPoint(0, in_box.getPoint(0).componentWiseMul({10, 10}));
+    player_area.setPoint(1, in_box.getPoint(1).componentWiseMul({10, 10}));
+    player_area.setPoint(2, in_box.getPoint(2).componentWiseMul({10, 10}));
+    player_area.setPoint(3, in_box.getPoint(3).componentWiseMul({10, 10}));
+    player_area.setOutlineColor(BLACK);
+    player_area.setFillColor(sf::Color::Transparent);
+    player_area.setOutlineThickness(1.f);
+
     int x = in_box.getSize().x + start_point.x;
     int y = in_box.getSize().y + start_point.y;
-    //Load grid
+//Load grid
     for (size_t i=start_point.y; i<y; i++) {
             std::vector<sf::RectangleShape> row;
             for (size_t j=start_point.x; j<x; j++) {
@@ -100,14 +110,12 @@ Player::Player(sf::RectangleShape player_area, sf::Color player_colour, sf::Colo
 }
 
 void Player::move() {
-    //p_ball.move({1.f, 1.f});
+    p_ball.move({1.f, 1.f});
 }
 
-void Player::collide(GridMap map) {
-    if (map.edge_collision(p_ball.get_ball())) {
-        p_ball.move({-1.f, -1.f});
-    }
-    p_ball.move({1.f, 1.f});
+void Player::collide() {
+    sf::CircleShape ball = p_ball.get_ball();
+    //sf::RectangleShape area = p_grid;
 }
 
 //sf::Text Player::getScore() {

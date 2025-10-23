@@ -1,28 +1,29 @@
 #pragma once
 #include "config.hpp"
 
-class GridMap : public sf::Drawable
-{
+class GridMap : public sf::Drawable {
 public:
     void load(sf::RectangleShape in_box, sf::Color p_col, sf::Vector2f start_point);
     bool edge_collision(sf::CircleShape ball);
+    void insertBox(int pos, sf::RectangleShape box);
     int getNumBoxes();
 
 private:
     std::vector<std::vector<sf::RectangleShape>> boxes;
+    sf::ConvexShape player_area;
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override
     {
         for (const auto& row : boxes) {
             for (const auto& rect : row) {
                 target.draw(rect, states);
+                target.draw(player_area, states);
             }
         }
     }
 };
 
-class Ball : public sf::Drawable, public sf::Transformable
-{
+class Ball : public sf::Drawable, public sf::Transformable {
 public:
     void load(sf::Vector2f start_pos, sf::Color pl_col, sf::Vector2f init_vel);
     void move(sf::Vector2f vec);
@@ -39,8 +40,7 @@ private:
 };
 
 
-class Paddle : public sf::Drawable, public sf::Transformable
-{
+class Paddle : public sf::Drawable, public sf::Transformable {
 public:
     void load(sf::Vector2f start_pos, sf::Color pl_col);
     void move();
@@ -54,12 +54,11 @@ private:
 };
 
 
-class Player : public sf::Drawable 
-{
+class Player : public sf::Drawable {
 public:
     Player(sf::RectangleShape player_area, sf::Color pl_col, sf::Color grid_colour, sf::Vector2f top_corner, bool player_right);
     void move();
-    void collide(GridMap map);
+    void collide();
     sf::Text getScore();
 
 private:
