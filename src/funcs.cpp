@@ -44,6 +44,10 @@ int GridMap::getNumBoxes() {
     return (int) boxes.size() + boxes[1].size();
 }
 
+sf::ConvexShape GridMap::getPlayerArea() {
+    return player_area;
+}
+
 void Ball::load(sf::Vector2f start_pos, sf::Color player_colour, sf::Vector2f init_vel) {
 /*
     start_pos: The start position of the ball

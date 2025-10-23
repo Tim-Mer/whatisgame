@@ -7,6 +7,7 @@ public:
     bool edge_collision(sf::CircleShape ball);
     void insertBox(int pos, sf::RectangleShape box);
     int getNumBoxes();
+    sf::ConvexShape getPlayerArea();
 
 private:
     std::vector<std::vector<sf::RectangleShape>> boxes;
