@@ -3,10 +3,14 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), WINDOW_NAME, sf::State::Windowed);
-    window.setFramerateLimit(120);
+//GAME SETTINGS
+    sf::ContextSettings settings;
+    settings.antiAliasingLevel = 2;
+//WINDOW CREATION
+    sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), WINDOW_NAME, sf::State::Windowed, settings);
+    window.setFramerateLimit(60);
     
-// Adding players
+//PLAYERS
     std::vector<Player*> players;
     Player *p;
     sf::RectangleShape player_area({WINDOW_WIDTH/20, WINDOW_HEIGHT/10});
@@ -18,6 +22,7 @@ int main()
 
     std::cout << "Num Players: " << players.size() << std::endl;
 
+//MAIN LOOP
     while(window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>()) {
@@ -27,7 +32,7 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
             window.close();
         }
-// CLEAR
+//CLEAR
         window.clear();
 
         for (size_t i=0; i<players.size(); i++) {
@@ -38,9 +43,10 @@ int main()
 //MOVE
             players[i]->move();
         }
-// DISPLAY
+//DISPLAY
         window.display();
     }
+//DESYTOY PLAYER OBJ
     for (size_t i=0; i<players.size(); i++) {
         delete players[i];
     }

@@ -119,7 +119,8 @@ void Player::move() {
 
 void Player::collide() {
     sf::CircleShape ball = p_ball.get_ball();
-    //sf::RectangleShape area = p_grid;
+    sf::ConvexShape area = p_grid.getPlayerArea();
+    
 }
 
 //sf::Text Player::getScore() {
