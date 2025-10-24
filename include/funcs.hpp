@@ -59,7 +59,7 @@ class Player : public sf::Drawable {
 public:
     Player(sf::RectangleShape player_area, sf::Color pl_col, sf::Color grid_colour, sf::Vector2f top_corner, bool player_right);
     void move();
-    void collide();
+    void detectCollision();
     sf::Text getScore();
 
 private:

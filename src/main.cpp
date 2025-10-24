@@ -13,10 +13,10 @@ int main()
 //PLAYERS
     std::vector<Player*> players;
     Player *p;
-    sf::RectangleShape player_area({WINDOW_WIDTH/20, WINDOW_HEIGHT/10});
-    p = new Player(player_area, PURPLE, ORANGE, {0.f, 0.f}, false);
+    sf::RectangleShape player_area_size({WINDOW_WIDTH/20, WINDOW_HEIGHT/10});
+    p = new Player(player_area_size, PURPLE, ORANGE, {0.f, 0.f}, false);
     players.push_back(p);
-    p = new Player(player_area, ORANGE, PURPLE, {(float) WINDOW_WIDTH/20, 0.f}, true);
+    p = new Player(player_area_size, ORANGE, PURPLE, {(float) WINDOW_WIDTH/20, 0.f}, true);
     players.push_back(p);
     p = NULL;
 
@@ -39,7 +39,7 @@ int main()
 //DRAW
             window.draw(*players[i]);
 //COLLIDE
-            players[i]->collide();
+            players[i]->detectCollision();
 //MOVE
             players[i]->move();
         }

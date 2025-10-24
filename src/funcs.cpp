@@ -59,16 +59,13 @@ void Ball::load(sf::Vector2f start_pos, sf::Color player_colour, sf::Vector2f in
     p_ball.setOutlineThickness(1.f);
     p_ball.setOutlineColor(BLACK);
     p_ball.setPosition(start_pos);
-    p_ball.move(init_vel);
+    vel = init_vel;
 }
 
 void Ball::move(sf::Vector2f vec) {
-    vel+=vec;
     // Set speed limit
-    if ( abs(vel.x) > MAX_SPEED || abs(vel.y) > MAX_SPEED) {
-        vel = vel.normalized();
-    }
     p_ball.move(vel);
+    //std::cout << "vel: " << vel.x << ", " << vel.y << std::endl;
 }
 
 sf::Vector2f Ball::get_vector() {
@@ -107,7 +104,8 @@ Player::Player(sf::RectangleShape player_area, sf::Color player_colour, sf::Colo
         (top_corner.x*10)+((player_area.getSize().x*10)*((player_right) ? (float) 0.25 : (float) 0.75)),
         (top_corner.y*10)+((player_area.getSize().y*10)/2)
     };
-    sf::Vector2f ball_velocity = {-1.f, 0.f};
+    sf::Vector2f ball_velocity = {2.f, 2.f};
+    if (player_right) {ball_velocity = {-2.f, -2.f};}
     p_ball.load(ball_start, player_colour, ball_velocity);
 //SCORE
     score = p_grid.getNumBoxes();
@@ -117,12 +115,14 @@ void Player::move() {
     p_ball.move({1.f, 1.f});
 }
 
-void Player::collide() {
-    sf::CircleShape ball = p_ball.get_ball();
-    sf::ConvexShape area = p_grid.getPlayerArea();
-    
+void Player::detectCollision() {
+    sf::Vector2f point = p_ball.get_ball().getPosition();
+    bool inside = p_grid.getPlayerArea().getGlobalBounds().contains(point);
+    if (!(inside)) {
+        std::cout << "Collision" << std::endl;
+    }    
 }
 
 //sf::Text Player::getScore() {
-    
+    //Returns a printable score for the player
 //}
