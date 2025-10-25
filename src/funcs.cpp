@@ -63,12 +63,13 @@ std::vector<sf::RectangleShape> GridMap::getBorderBoxes(bool p_right) {
 }
 
 sf::RectangleShape GridMap::removeBox(size_t y_location) {
+/*
+    Removes a box from the grid and returns said box
+*/
     sf::RectangleShape tmp = boxes[y_location].back();
     boxes[y_location].pop_back();
     return tmp;
 }
-
-
 
 void Ball::load(sf::Vector2f start_pos, sf::Color player_colour, sf::Vector2f init_vel) {
 /*
