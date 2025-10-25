@@ -3,15 +3,20 @@
 
 class GridMap : public sf::Drawable {
 public:
-    void load(sf::RectangleShape in_box, sf::Color p_col, sf::Vector2f start_point);
+    void load(sf::RectangleShape in_box, sf::Color p_col, sf::Vector2f start_point, bool player_right);
     bool edge_collision(sf::CircleShape ball);
     void insertBox(int pos, sf::RectangleShape box);
     int getNumBoxes();
     sf::ConvexShape getPlayerArea();
+    std::vector<sf::RectangleShape> getBorderBoxes(bool p_right);
+    sf::RectangleShape removeBox(size_t y_location);
+    void addBox(sf::RectangleShape box);
 
 private:
     std::vector<std::vector<sf::RectangleShape>> boxes;
     sf::ConvexShape player_area;
+    bool p_right;
+    sf::Color box_colour;
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override
     {
@@ -61,12 +66,14 @@ public:
     void move();
     void detectCollision();
     sf::Text getScore();
+    void swapBox(Player opponent);
 
 private:
     int score = 0;
     Paddle p_paddle;
     Ball p_ball;
     GridMap p_grid;
+    bool p_right;
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         target.draw(p_grid, states);

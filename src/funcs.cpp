@@ -1,11 +1,13 @@
 #include "funcs.hpp"
 
-void GridMap::load(sf::RectangleShape in_box, sf::Color p_col, sf::Vector2f start_point) {
+void GridMap::load(sf::RectangleShape in_box, sf::Color p_col, sf::Vector2f start_point, bool player_right) {
 /*
     in_box: The bounds of the players area
     p_col: Players Colour
     start_point: The top left corner of the players area
 */
+    p_right = player_right;
+    box_colour = p_col;
 //Setting player_area
     player_area.setPointCount(4);
     player_area.setPoint(0, in_box.getPoint(0).componentWiseMul({10, 10}));
@@ -31,7 +33,10 @@ void GridMap::load(sf::RectangleShape in_box, sf::Color p_col, sf::Vector2f star
                 }
                 row.push_back(cb);
             }
-            boxes.push_back(row);
+            if (player_right) {
+                std::reverse(row.begin(), row.end());
+            }
+            boxes.push_back(row);            
         }
 }
 
@@ -47,6 +52,23 @@ int GridMap::getNumBoxes() {
 sf::ConvexShape GridMap::getPlayerArea() {
     return player_area;
 }
+
+std::vector<sf::RectangleShape> GridMap::getBorderBoxes(bool p_right) {
+    std::vector<sf::RectangleShape> tmp;
+    size_t which_box = (p_right) ? boxes[0].size()-1 : 0;
+    for (size_t i=0; i<boxes.size(); i++) {
+        tmp.push_back(boxes[i][which_box]);
+    }
+    return tmp;
+}
+
+sf::RectangleShape GridMap::removeBox(size_t y_location) {
+    sf::RectangleShape tmp = boxes[y_location].back();
+    boxes[y_location].pop_back();
+    return tmp;
+}
+
+
 
 void Ball::load(sf::Vector2f start_pos, sf::Color player_colour, sf::Vector2f init_vel) {
 /*
@@ -94,7 +116,7 @@ Player::Player(sf::RectangleShape player_area, sf::Color player_colour, sf::Colo
     player_right: True for paddle and ball starting on the right, false for left
 */
 //GRID
-    p_grid.load(player_area, grid_colour, top_corner);
+    p_grid.load(player_area, grid_colour, top_corner, player_right);
 //PADDLE
     float player_centre = ((player_area.getSize().y*10)/2)-15;
     sf::Vector2f paddle_start({((player_right) ? WINDOW_WIDTH - 12.f : 5.f), player_centre});
@@ -109,6 +131,8 @@ Player::Player(sf::RectangleShape player_area, sf::Color player_colour, sf::Colo
     p_ball.load(ball_start, player_colour, ball_velocity);
 //SCORE
     score = p_grid.getNumBoxes();
+//OTHER
+    p_right = player_right;
 }
 
 void Player::move() {
@@ -117,10 +141,8 @@ void Player::move() {
 
 void Player::detectCollision() {
     sf::Vector2f point = p_ball.get_ball().getPosition();
-    bool inside = p_grid.getPlayerArea().getGlobalBounds().contains(point);
-    if (!(inside)) {
-        std::cout << "Collision" << std::endl;
-    }    
+    std::cout << "Point: " << point.x << ", " << point.y << std::endl;
+    sf::ConvexShape area = p_grid.getPlayerArea();
 }
 
 //sf::Text Player::getScore() {
