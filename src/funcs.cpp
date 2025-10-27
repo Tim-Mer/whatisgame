@@ -9,11 +9,25 @@ void GridMap::load(sf::RectangleShape in_box, sf::Color p_col, sf::Vector2f star
     p_right = player_right;
     box_colour = p_col;
 //Setting player_area
+/*
+p1    p0 p0     p1
++-------+-------+
+|       |       |
+|       |       |
+|       |       |
+|       |       |
+|       |       |
++-------+-------+
+p2    p3 p3     p2
+
+Written this way so that when adding a point to the convex shape it is appended to the end of the list.
+Also means that walls from p0-p1, p1-p2 and p2-p3 are stable and never change. It is only between p3-p0 that changes
+*/
     player_area.setPointCount(4);
-    player_area.setPoint(0, in_box.getPoint(0).componentWiseMul({10, 10}));
-    player_area.setPoint(1, in_box.getPoint(1).componentWiseMul({10, 10}));
-    player_area.setPoint(2, in_box.getPoint(2).componentWiseMul({10, 10}));
-    player_area.setPoint(3, in_box.getPoint(3).componentWiseMul({10, 10}));
+    player_area.setPoint(0, in_box.getPoint((player_right) ? 0 : 1).componentWiseMul({10, 10}));
+    player_area.setPoint(1, in_box.getPoint((player_right) ? 1 : 0).componentWiseMul({10, 10}));
+    player_area.setPoint(2, in_box.getPoint((player_right) ? 2 : 3).componentWiseMul({10, 10}));
+    player_area.setPoint(3, in_box.getPoint((player_right) ? 3 : 2).componentWiseMul({10, 10}));
     player_area.setOutlineColor(BLACK);
     player_area.setFillColor(sf::Color::Transparent);
     player_area.setOutlineThickness(1.f);
@@ -127,8 +141,8 @@ Player::Player(sf::RectangleShape player_area, sf::Color player_colour, sf::Colo
         (top_corner.x*10)+((player_area.getSize().x*10)*((player_right) ? (float) 0.25 : (float) 0.75)),
         (top_corner.y*10)+((player_area.getSize().y*10)/2)
     };
-    sf::Vector2f ball_velocity = {2.f, 2.f};
-    if (player_right) {ball_velocity = {-2.f, -2.f};}
+    sf::Vector2f ball_velocity = {-2.f, -2.f};
+    if (player_right) {ball_velocity = {2.f, 2.f};}
     p_ball.load(ball_start, player_colour, ball_velocity);
 //SCORE
     score = p_grid.getNumBoxes();
@@ -142,10 +156,10 @@ void Player::move() {
 
 void Player::detectCollision() {
     sf::Vector2f point = p_ball.get_ball().getPosition();
-    std::cout << "Point: " << point.x << ", " << point.y << std::endl;
+    //std::cout << "Point: " << point.x << ", " << point.y << std::endl;
     sf::ConvexShape area = p_grid.getPlayerArea();
 }
 
-//sf::Text Player::getScore() {
-    //Returns a printable score for the player
-//}
+/*sf::Text Player::getScore() {
+    Returns a printable score for the player
+}*/
