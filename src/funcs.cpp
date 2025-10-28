@@ -21,7 +21,7 @@ p1    p0 p0     p1
 p2    p3 p3     p2
 
 Written this way so that when adding a point to the convex shape it is appended to the end of the list.
-Also means that walls from p0-p1, p1-p2 and p2-p3 are stable and never change. It is only between p3-p0 that changes
+Also means that walls from p0-p1, p1-p2 and p2-p3 are stable and never change. It is only between p3-p0
 */
     player_area.setPointCount(4);
     player_area.setPoint(0, in_box.getPoint((player_right) ? 0 : 1).componentWiseMul({10, 10}));
