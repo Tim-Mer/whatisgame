@@ -155,9 +155,46 @@ void Player::move() {
 }
 
 void Player::detectCollision() {
-    sf::Vector2f point = p_ball.get_ball().getPosition();
+/*
+p1    p0 p0     p1
++-------+-------+
+|       |       |
+|       |       |
+|       |       |
+|       |       |
+|       |       |
++-------+-------+
+p2    p3 p3     p2
+
+for both,
+if ball is near the line p0/p1 it needs to bounce back downwards
+if the ball is on or very near the line p1/p2 it needs to bounce back in the x direction of p0
+if the ball is near the line p2/p3 it needs to bounce upwards
+
+
+could check total bounds periodiocally to reset the ball if it is outside the playable area
+how to check if a ball is within a square 
+how to check if a point is within a convex shape
+*/
+    sf::Vector2f ball = p_ball.get_ball().getPosition();
     //std::cout << "Point: " << point.x << ", " << point.y << std::endl;
     sf::ConvexShape area = p_grid.getPlayerArea();
+    sf::Vector2f p1, p2, p3;
+    p1 = area.getPoint(1);
+    p2 = area.getPoint(2);
+    if (ball.y<=p1.y) {
+        //ball need to bounce down
+    } else if (ball.x <= p1.x) {
+        //ball needs to bounce right
+    }
+    /*size_t num_points = area.getPointCount();
+    
+    for (size_t i=3; i<num_points; i++) {
+        p1=area.getPoint(i);
+        p2=area.getPoint(i+1);
+        p3 = p2-p1;
+        std::cout << "x:" << p3.x << " y:" << p3.y << std::endl;
+    }*/
 }
 
 /*sf::Text Player::getScore() {
