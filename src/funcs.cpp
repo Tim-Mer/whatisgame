@@ -186,6 +186,8 @@ how to check if a point is within a convex shape
         //ball need to bounce down
     } else if (ball.x <= p1.x) {
         //ball needs to bounce right
+    } else if (ball.y>= p2.y) {
+        //ball needs to bounce upwards
     }
     /*size_t num_points = area.getPointCount();
     
