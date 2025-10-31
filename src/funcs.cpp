@@ -189,8 +189,10 @@ how to check if a point is within a convex shape
     } else if (ball.y>= p2.y) {
         //ball needs to bounce upwards
     }
-    /*size_t num_points = area.getPointCount();
-    
+    size_t num_points = area.getPointCount();
+    // Need to check all the points on the middle
+    // Can have it so that only checks the boxes it's closest to?
+    /*
     for (size_t i=3; i<num_points; i++) {
         p1=area.getPoint(i);
         p2=area.getPoint(i+1);
