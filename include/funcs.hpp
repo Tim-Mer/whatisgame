@@ -80,7 +80,7 @@ private:
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         target.draw(p_grid, states);
-        target.draw(p_paddle, states);
+        //target.draw(p_paddle, states);
         target.draw(p_ball, states);
     }
 };

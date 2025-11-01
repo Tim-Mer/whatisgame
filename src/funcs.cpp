@@ -209,10 +209,10 @@ how to check if a point is within a convex shape
 
     if (p_grid.hitTopBottom(p_ball.get_ball())) {
         p_ball.bounce({1.f, -1.f});
-        std::cout << p_name << " Hit top/bottom" << std::endl;
+        //std::cout << p_name << " Hit top/bottom" << std::endl;
     } else if (p_grid.hitHomeEdge(p_ball.get_ball())) {
         p_ball.bounce({-1.f, 1.f});
-        std::cout << p_name << " Hit Home" << std::endl;
+        //std::cout << p_name << " Hit Home" << std::endl;
     }
 
 }
