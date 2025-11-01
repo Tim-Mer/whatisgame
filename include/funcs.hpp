@@ -11,6 +11,8 @@ public:
     std::vector<sf::RectangleShape> getBorderBoxes(bool p_right);
     sf::RectangleShape removeBox(size_t y_location);
     void addBox(sf::RectangleShape box);
+    bool hitTopBottom(sf::CircleShape ball);
+    bool hitHomeEdge(sf::CircleShape ball);
 
 private:
     std::vector<std::vector<sf::RectangleShape>> boxes;
@@ -18,8 +20,7 @@ private:
     bool p_right;
     sf::Color box_colour;
 
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const override
-    {
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         for (const auto& row : boxes) {
             for (const auto& rect : row) {
                 target.draw(rect, states);
@@ -32,7 +33,8 @@ private:
 class Ball : public sf::Drawable, public sf::Transformable {
 public:
     void load(sf::Vector2f start_pos, sf::Color pl_col, sf::Vector2f init_vel);
-    void move(sf::Vector2f vec);
+    void move();
+    void bounce(sf::Vector2f dir);
     sf::Vector2f get_vector();
     sf::CircleShape get_ball();
 
@@ -62,7 +64,7 @@ private:
 
 class Player : public sf::Drawable {
 public:
-    Player(sf::RectangleShape player_area, sf::Color pl_col, sf::Color grid_colour, sf::Vector2f top_corner, bool player_right);
+    Player(sf::RectangleShape player_area, sf::Color pl_col, sf::Color grid_colour, sf::Vector2f top_corner, bool player_right, char* name);
     void move();
     void detectCollision();
     sf::Text getScore();
@@ -74,6 +76,7 @@ private:
     Ball p_ball;
     GridMap p_grid;
     bool p_right;
+    char* p_name;
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         target.draw(p_grid, states);

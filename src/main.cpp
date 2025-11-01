@@ -13,10 +13,9 @@ int main()
 //PLAYERS
     std::vector<Player*> players;
     Player *p;
-    sf::RectangleShape player_area_size({WINDOW_WIDTH/20, WINDOW_HEIGHT/10});
-    p = new Player(player_area_size, PURPLE, ORANGE, {0.f, 0.f}, false);
+    p = new Player(sf::RectangleShape({WINDOW_WIDTH/20, WINDOW_HEIGHT/10}), PURPLE, ORANGE, {0.f, 0.f}, false, "Player 1");
     players.push_back(p);
-    p = new Player(player_area_size, ORANGE, PURPLE, {(float) WINDOW_WIDTH/20, 0.f}, true);
+    p = new Player(sf::RectangleShape({WINDOW_WIDTH/20, WINDOW_HEIGHT/10}), ORANGE, PURPLE, {(float) WINDOW_WIDTH/2, 0.f}, true, "Player 2");
     players.push_back(p);
     p = NULL;
 

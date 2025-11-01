@@ -24,20 +24,24 @@ Written this way so that when adding a point to the convex shape it is appended 
 Also means that walls from p0-p1, p1-p2 and p2-p3 are stable and never change. It is only between p3-p0
 */
     player_area.setPointCount(4);
-    player_area.setPoint(0, in_box.getPoint((player_right) ? 0 : 1).componentWiseMul({10, 10}));
-    player_area.setPoint(1, in_box.getPoint((player_right) ? 1 : 0).componentWiseMul({10, 10}));
-    player_area.setPoint(2, in_box.getPoint((player_right) ? 2 : 3).componentWiseMul({10, 10}));
-    player_area.setPoint(3, in_box.getPoint((player_right) ? 3 : 2).componentWiseMul({10, 10}));
+    //Top Left
+    player_area.setPoint(0, in_box.getPoint((player_right) ? 0 : 1).componentWiseMul({10, 10})+start_point);
+    //Top Right
+    player_area.setPoint(1, in_box.getPoint((player_right) ? 1 : 0).componentWiseMul({10, 10})+start_point);
+    //Bottom Right
+    player_area.setPoint(2, in_box.getPoint((player_right) ? 2 : 3).componentWiseMul({10, 10})+start_point);
+    //Bottom Left
+    player_area.setPoint(3, in_box.getPoint((player_right) ? 3 : 2).componentWiseMul({10, 10})+start_point);
     player_area.setOutlineColor(BLACK);
     player_area.setFillColor(sf::Color::Transparent);
     player_area.setOutlineThickness(1.f);
 
-    int x = in_box.getSize().x + start_point.x;
-    int y = in_box.getSize().y + start_point.y;
+    size_t num_boxes_across = player_area.getPoint((player_right) ? 1 : 0).x/10;
+    size_t num_boxes_down = player_area.getPoint(2).y/10;
 //Load grid
-    for (size_t i=start_point.y; i<y; i++) {
+    for (size_t i=start_point.y; i<num_boxes_down; i++) {
             std::vector<sf::RectangleShape> row;
-            for (size_t j=start_point.x; j<x; j++) {
+            for (size_t j=start_point.x/10; j<num_boxes_across; j++) {
                 sf::RectangleShape cb({10.f, 10.f});
                 cb.setFillColor(p_col);
                 cb.setPosition({(float) j*10, (float) i*10});
@@ -61,6 +65,21 @@ bool GridMap::edge_collision(sf::CircleShape ball) {
 
 int GridMap::getNumBoxes() {
     return (int) boxes.size() + boxes[1].size();
+}
+
+bool GridMap::hitTopBottom(sf::CircleShape ball) {
+    sf::Vector2f point = ball.getPosition();
+    sf::Vector2f p1 = player_area.getPoint(0), p2 = player_area.getPoint(3);
+    return (point.y < p1.y || point.y > p2.y);
+}
+
+bool GridMap::hitHomeEdge(sf::CircleShape ball) {
+    sf::Vector2f point = ball.getPosition();
+    sf::Vector2f p1 = player_area.getPoint(1);
+    if (p_right) {
+        return (point.x > p1.x);
+    }
+    return (point.x < p1.x);
 }
 
 sf::ConvexShape GridMap::getPlayerArea() {
@@ -99,10 +118,20 @@ void Ball::load(sf::Vector2f start_pos, sf::Color player_colour, sf::Vector2f in
     vel = init_vel;
 }
 
-void Ball::move(sf::Vector2f vec) {
+void Ball::move() {
     // Set speed limit
     p_ball.move(vel);
     //std::cout << "vel: " << vel.x << ", " << vel.y << std::endl;
+}
+
+void Ball::bounce(sf::Vector2f dir) {
+/*
+    dir x/y value must be either 1 or -1
+    up/down:    {1, -1}
+    left/right: {-1, 1}
+*/
+    vel.x *= dir.x;
+    vel.y *= dir.y;
 }
 
 sf::Vector2f Ball::get_vector() {
@@ -123,7 +152,7 @@ void Paddle::load(sf::Vector2f start_pos, sf::Color player_colour) {
     paddle.setPosition(start_pos);
 }
 
-Player::Player(sf::RectangleShape player_area, sf::Color player_colour, sf::Color grid_colour, sf::Vector2f top_corner, bool player_right) {
+Player::Player(sf::RectangleShape player_area, sf::Color player_colour, sf::Color grid_colour, sf::Vector2f top_corner, bool player_right, char* name) {
 /*
     player area: Total area that is in the players control including further expanded area
     player_colour: Player colour
@@ -138,20 +167,21 @@ Player::Player(sf::RectangleShape player_area, sf::Color player_colour, sf::Colo
     p_paddle.load(paddle_start, player_colour);
 //BALL
     sf::Vector2f ball_start = {
-        (top_corner.x*10)+((player_area.getSize().x*10)*((player_right) ? (float) 0.25 : (float) 0.75)),
-        (top_corner.y*10)+((player_area.getSize().y*10)/2)
+        (top_corner.x)+(10*(player_area.getSize().x)*((player_right) ? (float) 0.25 : (float) 0.75)),
+        (top_corner.y)+(10*(player_area.getSize().y)/2)
     };
     sf::Vector2f ball_velocity = {-2.f, -2.f};
     if (player_right) {ball_velocity = {2.f, 2.f};}
     p_ball.load(ball_start, player_colour, ball_velocity);
 //SCORE
     score = p_grid.getNumBoxes();
+    p_name = name;
 //OTHER
     p_right = player_right;
 }
 
 void Player::move() {
-    p_ball.move({1.f, 1.f});
+    p_ball.move();
 }
 
 void Player::detectCollision() {
@@ -176,29 +206,15 @@ could check total bounds periodiocally to reset the ball if it is outside the pl
 how to check if a ball is within a square 
 how to check if a point is within a convex shape
 */
-    sf::Vector2f ball = p_ball.get_ball().getPosition();
-    //std::cout << "Point: " << point.x << ", " << point.y << std::endl;
-    sf::ConvexShape area = p_grid.getPlayerArea();
-    sf::Vector2f p1, p2, p3;
-    p1 = area.getPoint(1);
-    p2 = area.getPoint(2);
-    if (ball.y<=p1.y) {
-        //ball need to bounce down
-    } else if (ball.x <= p1.x) {
-        //ball needs to bounce right
-    } else if (ball.y>= p2.y) {
-        //ball needs to bounce upwards
+
+    if (p_grid.hitTopBottom(p_ball.get_ball())) {
+        p_ball.bounce({1.f, -1.f});
+        std::cout << p_name << " Hit top/bottom" << std::endl;
+    } else if (p_grid.hitHomeEdge(p_ball.get_ball())) {
+        p_ball.bounce({-1.f, 1.f});
+        std::cout << p_name << " Hit Home" << std::endl;
     }
-    size_t num_points = area.getPointCount();
-    // Need to check all the points on the middle
-    // Can have it so that only checks the boxes it's closest to?
-    /*
-    for (size_t i=3; i<num_points; i++) {
-        p1=area.getPoint(i);
-        p2=area.getPoint(i+1);
-        p3 = p2-p1;
-        std::cout << "x:" << p3.x << " y:" << p3.y << std::endl;
-    }*/
+
 }
 
 /*sf::Text Player::getScore() {
