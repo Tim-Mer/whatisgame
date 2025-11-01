@@ -1,5 +1,5 @@
 #include "config.hpp"
-#include "funcs.hpp"
+#include "classes.hpp"
 
 int main()
 {
@@ -38,7 +38,7 @@ int main()
 //DRAW
             window.draw(*players[i]);
 //COLLIDE
-            players[i]->detectCollision();
+            players[i]->detectCollision((i) ? players[0] : players[1]);
 //MOVE
             players[i]->move();
         }

@@ -4,7 +4,6 @@
 class GridMap : public sf::Drawable {
 public:
     void load(sf::RectangleShape in_box, sf::Color p_col, sf::Vector2f start_point, bool player_right);
-    bool edge_collision(sf::CircleShape ball);
     void insertBox(int pos, sf::RectangleShape box);
     int getNumBoxes();
     sf::ConvexShape getPlayerArea();
@@ -66,9 +65,10 @@ class Player : public sf::Drawable {
 public:
     Player(sf::RectangleShape player_area, sf::Color pl_col, sf::Color grid_colour, sf::Vector2f top_corner, bool player_right, char* name);
     void move();
-    void detectCollision();
+    void detectCollision(Player *opponent);
     sf::Text getScore();
     void swapBox(Player opponent);
+    std::vector<sf::RectangleShape> getEdgeBoxes();
 
 private:
     int score = 0;
