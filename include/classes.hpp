@@ -9,7 +9,7 @@ public:
     sf::ConvexShape getPlayerArea();
     std::vector<sf::RectangleShape> getBorderBoxes(bool p_right);
     sf::RectangleShape removeBox(size_t y_location);
-    void addBox(sf::RectangleShape box);
+    void addBox(sf::RectangleShape box, size_t y_location);
     bool hitTopBottom(sf::CircleShape ball);
     bool hitHomeEdge(sf::CircleShape ball);
 
@@ -67,8 +67,10 @@ public:
     void move();
     void detectCollision(Player *opponent);
     sf::Text getScore();
-    void swapBox(Player opponent);
+    void swapBox(Player *opponent, size_t hit_location);
     std::vector<sf::RectangleShape> getEdgeBoxes();
+    sf::RectangleShape removeBox(size_t y_location);
+    void addBox(sf::RectangleShape box, size_t y_location);
 
 private:
     int score = 0;
@@ -77,6 +79,7 @@ private:
     GridMap p_grid;
     bool p_right;
     char* p_name;
+
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         target.draw(p_grid, states);

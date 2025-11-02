@@ -18,8 +18,8 @@ Player::Player(sf::RectangleShape player_area, sf::Color player_colour, sf::Colo
         (top_corner.x)+(10*(player_area.getSize().x)*((player_right) ? (float) 0.25 : (float) 0.75)),
         (top_corner.y)+(10*(player_area.getSize().y)/2)
     };
-    sf::Vector2f ball_velocity = {-2.f, -2.f};
-    if (player_right) {ball_velocity = {2.f, 2.f};}
+    sf::Vector2f ball_velocity = {-5.f, -5.f};
+    if (player_right) {ball_velocity = {5.f, 5.f};}
     p_ball.load(ball_start, player_colour, ball_velocity);
 //SCORE
     score = p_grid.getNumBoxes();
@@ -62,25 +62,47 @@ how to check if a point is within a convex shape
     if (p_grid.hitTopBottom(c_ball)) {
         p_ball.bounce({1.f, -1.f});
         std::cout << p_name << " Hit top/bottom" << std::endl;
+        return;
     } else if (p_grid.hitHomeEdge(c_ball)) {
         p_ball.bounce({-1.f, 1.f});
         std::cout << p_name << " Hit Home" << std::endl;
-    } else {
-        //check where it has breached the opponents boxes
-        std::vector<sf::RectangleShape> op_boxes = opponent->getEdgeBoxes();
-        sf::Vector2f ball_point = c_ball.getPosition();
-        for (size_t i=0; i<op_boxes.size(); i++) {
-            if (op_boxes[i].getGlobalBounds().contains(ball_point)) {
-                p_ball.bounce({-1.f, 1.f});
-                std::cout << p_name << " Hit Box: " << i << std::endl;
-            }
+        return;
+    }
+    //check where it has breached the opponents boxes
+    std::vector<sf::RectangleShape> op_boxes = opponent->getEdgeBoxes();
+    sf::Vector2f ball_point = c_ball.getPosition();
+    size_t hit_location=0;
+    bool no_box_hit=true;
+    for (hit_location; hit_location<op_boxes.size(); hit_location++) {
+        if (op_boxes[hit_location].getGlobalBounds().contains(ball_point)) {
+            p_ball.bounce({-1.f, 1.f});
+            no_box_hit=false;
+            break;
         }
     }
+    if (no_box_hit) {
+        std::cout << "NOTHING WAS HIT BUT BALL IS OUTSIDE BOUNDS?" << std::endl;
+        return;
+    }
+    //std::cout << p_name << " Hit Box: " << hit_location << std::endl;
+    swapBox(opponent, hit_location);
     return;
 }
 
 std::vector<sf::RectangleShape> Player::getEdgeBoxes() {
     return p_grid.getBorderBoxes(p_right);
+}
+
+void Player::swapBox(Player *opponent, size_t hit_location) {
+    addBox(opponent->removeBox(hit_location), hit_location);
+}
+
+void Player::addBox(sf::RectangleShape box, size_t y_location) {
+    p_grid.addBox(box, y_location);
+}
+
+sf::RectangleShape Player::removeBox(size_t hit_location) {
+    return p_grid.removeBox(hit_location);
 }
 
 /*sf::Text Player::getScore() {

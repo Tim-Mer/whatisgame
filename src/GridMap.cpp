@@ -38,13 +38,16 @@ Also means that walls from p0-p1, p1-p2 and p2-p3 are stable and never change. I
 
     size_t num_boxes_across = player_area.getPoint((player_right) ? 1 : 0).x/10;
     size_t num_boxes_down = player_area.getPoint(2).y/10;
+    float x=0, y=0;
 //Load grid
     for (size_t i=0; i<num_boxes_down; i++) {
             std::vector<sf::RectangleShape> row;
             for (size_t j=0; j<num_boxes_across; j++) {
+                x = start_point.x+(j*10);
+                y = i*10;
                 sf::RectangleShape cb({10.f, 10.f});
                 cb.setFillColor(p_col);
-                cb.setPosition({(float) start_point.x+(j*10), (float) i*10});
+                cb.setPosition({x, y});
                 if (ENABLE_GRID) {
                     cb.setOutlineThickness(1.f);
                     cb.setOutlineColor(BLACK);
@@ -86,7 +89,7 @@ std::vector<sf::RectangleShape> GridMap::getBorderBoxes(bool p_right) {
     std::vector<sf::RectangleShape> tmp;
     size_t which_box = 0;
     for (size_t i=0; i<boxes.size(); i++) {
-        if (p_right) {which_box = boxes[0].size()-1;}
+        which_box = boxes[i].size()-1;
         tmp.push_back(boxes[i][which_box]);
     }
     return tmp;
@@ -98,5 +101,12 @@ sf::RectangleShape GridMap::removeBox(size_t y_location) {
 */
     sf::RectangleShape tmp = boxes[y_location].back();
     boxes[y_location].pop_back();
+    //Need to redefine the player_area before returning
     return tmp;
+}
+
+void GridMap::addBox(sf::RectangleShape box, size_t y_location) {
+    box.setFillColor(box_colour);
+    boxes[y_location].push_back(box);
+    //Need to redefine the player_area before returning
 }
