@@ -61,11 +61,11 @@ how to check if a point is within a convex shape
     //check where the ball left the field
     if (p_grid.hitTopBottom(c_ball)) {
         p_ball.bounce({1.f, -1.f});
-        std::cout << p_name << " Hit top/bottom" << std::endl;
+        //std::cout << p_name << " Hit top/bottom" << std::endl;
         return;
     } else if (p_grid.hitHomeEdge(c_ball)) {
         p_ball.bounce({-1.f, 1.f});
-        std::cout << p_name << " Hit Home" << std::endl;
+        //std::cout << p_name << " Hit Home" << std::endl;
         return;
     }
     //check where it has breached the opponents boxes
@@ -81,7 +81,7 @@ how to check if a point is within a convex shape
         }
     }
     if (no_box_hit) {
-        std::cout << "NOTHING WAS HIT BUT BALL IS OUTSIDE BOUNDS?" << std::endl;
+        //std::cout << "NOTHING WAS HIT BUT BALL IS OUTSIDE BOUNDS?" << std::endl;
         return;
     }
     //std::cout << p_name << " Hit Box: " << hit_location << std::endl;
