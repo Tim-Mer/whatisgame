@@ -127,6 +127,7 @@ sfml box point locations for RectangleShape
     std::vector<sf::Vector2f> new_points;
     size_t which_top_point = (p_right) ? 0 : 1;
     size_t which_bottom_point = (p_right) ? 3 : 2;
+    size_t which_last_point = (p_right) ? 2 : 3;
     //starting at point(1) of player_area, need to count the number of squares down 
     //that are different from the starting x value of point(1)
 
@@ -145,4 +146,12 @@ sfml box point locations for RectangleShape
     }
     //at the end the last point needs to be updated to the cur_x for its x coord
     player_area.setPointCount(4+new_points.size());
+    
+    //TODO: Add all the points from the new_points vector
+    //-------------HERE!!!!------------
+
+    //Set last point to the bottom corner of the first box in the last row of boxes
+    player_area.setPoint(player_area.getPointCount()-1, boxes.back()[0].getPoint(which_last_point));
+    // Set the second last point to have the cur_x as x and the y value of the last point
+    player_area.setPoint(player_area.getPointCount()-2, {cur_x, player_area.getPoint(player_area.getPointCount()-1).y});
 }
