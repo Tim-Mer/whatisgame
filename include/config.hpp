@@ -18,6 +18,7 @@ const sf::Color ORANGE(250, 165, 0);
 const sf::Color PURPLE(128, 0, 128);
 const sf::Color BLACK(0, 0, 0);
 const sf::Color WHITE(255, 255, 255);
+const float BOX_SIZE = 20;
 
 // Game Settings
 const int MAX_SPEED = 5;

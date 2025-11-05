@@ -18,8 +18,8 @@ Player::Player(sf::RectangleShape player_area, sf::Color player_colour, sf::Colo
         (top_corner.x)+(10*(player_area.getSize().x)*((player_right) ? (float) 0.25 : (float) 0.75)),
         (top_corner.y)+(10*(player_area.getSize().y)/2)
     };
-    sf::Vector2f ball_velocity = {-5.f, -5.f};
-    if (player_right) {ball_velocity = {5.f, 5.f};}
+    sf::Vector2f ball_velocity = {-3.f, -3.f};
+    if (player_right) {ball_velocity = {2.f, 3.f};}
     p_ball.load(ball_start, player_colour, ball_velocity);
 //SCORE
     score = p_grid.getNumBoxes();

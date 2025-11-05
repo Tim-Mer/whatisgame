@@ -10,7 +10,7 @@ void GridMap::load(sf::RectangleShape in_box, sf::Color p_col, sf::Vector2f star
     box_colour = p_col;
 //Setting player_area
 /*
-p1    p0 p0     p1
+p0    p1 p1     p0
 +-------+-------+
 |       |       |
 |       |       |
@@ -18,34 +18,35 @@ p1    p0 p0     p1
 |       |       |
 |       |       |
 +-------+-------+
-p2    p3 p3     p2
+p3    p2 p2     p3
 
 Written this way so that when adding a point to the convex shape it is appended to the end of the list.
 Also means that walls from p0-p1, p1-p2 and p2-p3 are stable and never change. It is only between p3-p0
 */
     player_area.setPointCount(4);
     //Top Left
-    player_area.setPoint(0, in_box.getPoint((player_right) ? 0 : 1).componentWiseMul({10, 10})+start_point);
+    player_area.setPoint(0, in_box.getPoint((player_right) ? 1 : 0).componentWiseMul({10, 10})+start_point);
     //Top Right
-    player_area.setPoint(1, in_box.getPoint((player_right) ? 1 : 0).componentWiseMul({10, 10})+start_point);
+    player_area.setPoint(1, in_box.getPoint((player_right) ? 0 : 1).componentWiseMul({10, 10})+start_point);
     //Bottom Right
-    player_area.setPoint(2, in_box.getPoint((player_right) ? 2 : 3).componentWiseMul({10, 10})+start_point);
+    player_area.setPoint(2, in_box.getPoint((player_right) ? 3 : 2).componentWiseMul({10, 10})+start_point);
     //Bottom Left
-    player_area.setPoint(3, in_box.getPoint((player_right) ? 3 : 2).componentWiseMul({10, 10})+start_point);
+    player_area.setPoint(3, in_box.getPoint((player_right) ? 2 : 3).componentWiseMul({10, 10})+start_point);
     player_area.setOutlineColor(BLACK);
     player_area.setFillColor(sf::Color::Transparent);
     player_area.setOutlineThickness(1.f);
 
-    size_t num_boxes_across = player_area.getPoint((player_right) ? 1 : 0).x/10;
-    size_t num_boxes_down = player_area.getPoint(2).y/10;
+    
+    size_t num_boxes_across = player_area.getPoint((player_right) ? 0 : 1).x/BOX_SIZE;
+    size_t num_boxes_down = player_area.getPoint(2).y/BOX_SIZE;
     float x=0, y=0;
 //Load grid
     for (size_t i=0; i<num_boxes_down; i++) {
             std::vector<sf::RectangleShape> row;
             for (size_t j=0; j<num_boxes_across; j++) {
-                x = start_point.x+(j*10);
-                y = i*10;
-                sf::RectangleShape cb({10.f, 10.f});
+                x = start_point.x+(j*BOX_SIZE);
+                y = i*BOX_SIZE;
+                sf::RectangleShape cb({BOX_SIZE, BOX_SIZE});
                 cb.setFillColor(p_col);
                 cb.setPosition({x, y});
                 if (ENABLE_GRID) {
@@ -102,6 +103,7 @@ sf::RectangleShape GridMap::removeBox(size_t y_location) {
     sf::RectangleShape tmp = boxes[y_location].back();
     boxes[y_location].pop_back();
     //Need to redefine the player_area before returning
+    reconstructPlayerArea();
     return tmp;
 }
 
@@ -109,4 +111,38 @@ void GridMap::addBox(sf::RectangleShape box, size_t y_location) {
     box.setFillColor(box_colour);
     boxes[y_location].push_back(box);
     //Need to redefine the player_area before returning
+    reconstructPlayerArea();
+}
+
+void GridMap::reconstructPlayerArea() {
+/*
+This function will reconstruct the player_area ConvexShape to be use for initial collision detection
+
+sfml box point locations for RectangleShape
+0-----1
+|     |
+|     |
+3-----2
+*/
+    std::vector<sf::Vector2f> new_points;
+    size_t which_top_point = (p_right) ? 0 : 1;
+    size_t which_bottom_point = (p_right) ? 3 : 2;
+    //starting at point(1) of player_area, need to count the number of squares down 
+    //that are different from the starting x value of point(1)
+
+    //from p1 to the second last point see if anything needs to be changed
+    player_area.setPoint(1, boxes[0].back().getPoint(which_top_point));
+    float cur_x = player_area.getPoint(1).x;
+    for (size_t i=1; i<boxes.size(); i++) {
+        //check if the current box is at the same x as the cur_x
+        if ( boxes[i].back().getPoint(which_top_point).x != cur_x) {
+            new_points.push_back(boxes[i-1].back().getPoint(which_bottom_point));
+            new_points.push_back(boxes[i].back().getPoint(which_top_point));
+            cur_x = boxes[i].back().getPoint(which_top_point).x;
+        }
+        //if it is nothing needs to be done and no new point needs to be added
+        //if it is different then need to add a point as the bottom of the previous box and the top of the current box
+    }
+    //at the end the last point needs to be updated to the cur_x for its x coord
+    player_area.setPointCount(4+new_points.size());
 }

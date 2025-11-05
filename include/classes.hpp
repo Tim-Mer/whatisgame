@@ -18,6 +18,7 @@ private:
     sf::ConvexShape player_area;
     bool p_right;
     sf::Color box_colour;
+    void reconstructPlayerArea();
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
         for (const auto& row : boxes) {
