@@ -18,8 +18,8 @@ Player::Player(sf::RectangleShape player_area, sf::Color player_colour, sf::Colo
         (top_corner.x)+(10*(player_area.getSize().x)*((player_right) ? (float) 0.25 : (float) 0.75)),
         (top_corner.y)+(10*(player_area.getSize().y)/2)
     };
-    sf::Vector2f ball_velocity = {-3.f, -3.f};
-    if (player_right) {ball_velocity = {2.f, 3.f};}
+    sf::Vector2f ball_velocity = {-10.f, -10.f};
+    if (player_right) {ball_velocity = {15.f, 10.f};}
     p_ball.load(ball_start, player_colour, ball_velocity);
 //SCORE
     score = p_grid.getNumBoxes();
@@ -78,6 +78,17 @@ how to check if a point is within a convex shape
             p_ball.bounce({-1.f, 1.f});
             no_box_hit=false;
             break;
+        }
+    }
+    if (no_box_hit) {
+        //std::cout << "NOTHING WAS HIT BUT BALL IS OUTSIDE BOUNDS?" << std::endl;
+        //Alternative method, find closest box and remove that instead
+        for (hit_location=0; hit_location<op_boxes.size(); hit_location++) {
+            if (op_boxes[hit_location].getPosition().y > c_ball.getPosition().y) {
+                p_ball.bounce({-1.f, 1.f});
+                no_box_hit=false;
+                break;
+            }
         }
     }
     if (no_box_hit) {

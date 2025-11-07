@@ -68,14 +68,14 @@ int GridMap::getNumBoxes() {
 
 bool GridMap::hitTopBottom(sf::CircleShape ball) {
     sf::Vector2f point = ball.getPosition();
-    sf::Vector2f p1 = player_area.getPoint(0), p2 = player_area.getPoint(3);
+    sf::Vector2f p1 = player_area.getPoint(0), p2 = player_area.getPoint(player_area.getPointCount()-1);
     return (point.y < p1.y || point.y > p2.y);
 }
 
 bool GridMap::hitHomeEdge(sf::CircleShape ball) {
     // Instead of bouncing the ball is reset with a time penalty?
     sf::Vector2f point = ball.getPosition();
-    sf::Vector2f p1 = player_area.getPoint(1);
+    sf::Vector2f p1 = player_area.getPoint(0);
     if (p_right) {
         return (point.x > p1.x);
     }
@@ -124,6 +124,44 @@ sfml box point locations for RectangleShape
 |     |
 3-----2
 */
+    std::vector<sf::RectangleShape> edge_boxes = getBorderBoxes(p_right);
+    std::vector<sf::Vector2f> new_points;
+    if (!p_right) {
+        //add wiggle
+        for (size_t i=0; i<edge_boxes.size(); i++) {
+            edge_boxes[i].move({BOX_SIZE, 0});
+        }
+    }
+    player_area.setPoint(1, edge_boxes[0].getPosition());
+    float cur_x = player_area.getPoint(1).x;
+    for (size_t i=1; i<edge_boxes.size(); i++) {
+        if (edge_boxes[i].getPosition().x != cur_x) {
+            new_points.push_back({cur_x, edge_boxes[i].getPosition().y});
+            new_points.push_back(edge_boxes[i].getPosition());
+            cur_x = edge_boxes[i].getPosition().x;
+        }
+    }
+
+
+
+    if (new_points.size()>0) {
+        player_area.setPointCount(4+new_points.size());
+        //need to add new boxes
+        for (size_t i=0; i<new_points.size(); i++) {
+            player_area.setPoint(2+i, new_points[i]);
+        }
+    }
+
+
+    //Set last point to the bottom corner of the first box in the last row of boxes
+    player_area.setPoint(player_area.getPointCount()-1, {player_area.getPoint(0).x, edge_boxes.back().getPosition().y+BOX_SIZE});
+    // Set the second last point to have the cur_x as x and the y value of the last point
+    player_area.setPoint(player_area.getPointCount()-2, {cur_x, player_area.getPoint(player_area.getPointCount()-1).y});
+
+
+
+
+/*
     std::vector<sf::Vector2f> new_points;
     size_t which_top_point = (p_right) ? 0 : 1;
     size_t which_bottom_point = (p_right) ? 3 : 2;
@@ -132,7 +170,7 @@ sfml box point locations for RectangleShape
     //that are different from the starting x value of point(1)
 
     //from p1 to the second last point see if anything needs to be changed
-    player_area.setPoint(1, boxes[0].back().getPoint(which_top_point));
+    player_area.setPoint(1, boxes[0].back().getPosition());
     float cur_x = player_area.getPoint(1).x;
     for (size_t i=1; i<boxes.size(); i++) {
         //check if the current box is at the same x as the cur_x
@@ -149,9 +187,14 @@ sfml box point locations for RectangleShape
     
     //TODO: Add all the points from the new_points vector
     //-------------HERE!!!!------------
+    if (new_points.size()>0) {
+        for (size_t i=0; i<new_points.size(); i++) {
+            player_area.setPoint(i+2, new_points[i]);
+        }
+    }
 
     //Set last point to the bottom corner of the first box in the last row of boxes
     player_area.setPoint(player_area.getPointCount()-1, boxes.back()[0].getPoint(which_last_point));
     // Set the second last point to have the cur_x as x and the y value of the last point
-    player_area.setPoint(player_area.getPointCount()-2, {cur_x, player_area.getPoint(player_area.getPointCount()-1).y});
+    player_area.setPoint(player_area.getPointCount()-2, {cur_x, player_area.getPoint(player_area.getPointCount()-1).y});*/
 }
