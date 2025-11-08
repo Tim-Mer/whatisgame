@@ -80,6 +80,7 @@ private:
     GridMap p_grid;
     bool p_right;
     char* p_name;
+    bool p_bounce_back = false;
 
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override {

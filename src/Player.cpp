@@ -56,7 +56,13 @@ how to check if a point is within a convex shape
 */
     sf::CircleShape c_ball = p_ball.get_ball();
     //check if ball is outside the player area
-    if (p_grid.getPlayerArea().getGlobalBounds().contains(c_ball.getPosition())) {return;}
+    if (p_grid.getPlayerArea().getGlobalBounds().contains(c_ball.getPosition())) {
+        p_bounce_back = false;
+        return;
+    }
+    if (p_bounce_back) {
+        return;
+    }
     
     //check where the ball left the field
     if (p_grid.hitTopBottom(c_ball)) {
@@ -77,6 +83,7 @@ how to check if a point is within a convex shape
         if (op_boxes[hit_location].getGlobalBounds().contains(ball_point)) {
             p_ball.bounce({-1.f, 1.f});
             no_box_hit=false;
+            p_bounce_back = true;
             break;
         }
     }
@@ -87,6 +94,7 @@ how to check if a point is within a convex shape
             if (op_boxes[hit_location].getPosition().y > c_ball.getPosition().y) {
                 p_ball.bounce({-1.f, 1.f});
                 no_box_hit=false;
+                p_bounce_back = true;
                 break;
             }
         }
