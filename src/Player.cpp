@@ -60,9 +60,7 @@ how to check if a point is within a convex shape
         p_bounce_back = false;
         return;
     }
-    if (p_bounce_back) {
-        return;
-    }
+    if (p_bounce_back) {return;}
     
     //check where the ball left the field
     if (p_grid.hitTopBottom(c_ball)) {
