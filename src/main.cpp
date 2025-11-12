@@ -1,5 +1,6 @@
 #include "config.hpp"
 #include "classes.hpp"
+#include "funcs.hpp"
 
 int main()
 {
@@ -42,6 +43,8 @@ int main()
 //MOVE
             players[i]->move();
         }
+//SCORE
+        computeScore(players);
 //DISPLAY
         window.display();
     }

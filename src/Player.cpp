@@ -127,6 +127,10 @@ sf::RectangleShape Player::removeBox(size_t hit_location) {
     return p_grid.removeBox(hit_location);
 }
 
-/*sf::Text Player::getp_score() {
-    Returns a printable p_score for the player
-}*/
+int Player::getp_score() {
+    return p_score;
+}
+
+char* Player::getp_name() {
+    return p_name;
+}

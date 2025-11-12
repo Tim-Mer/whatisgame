@@ -72,6 +72,8 @@ public:
     std::vector<sf::RectangleShape> getEdgeBoxes();
     sf::RectangleShape removeBox(size_t y_location);
     void addBox(sf::RectangleShape box, size_t y_location);
+    int getp_score();
+    char* getp_name();
 
 private:
     int p_score = 0;
