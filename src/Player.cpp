@@ -21,8 +21,8 @@ Player::Player(sf::RectangleShape player_area, sf::Color player_colour, sf::Colo
     sf::Vector2f ball_velocity = {-10.f, -10.f};
     if (player_right) {ball_velocity = {15.f, 10.f};}
     p_ball.load(ball_start, player_colour, ball_velocity);
-//SCORE
-    score = p_grid.getNumBoxes();
+//p_score
+    p_score = p_grid.getNumBoxes();
     p_name = name;
 //OTHER
     p_right = player_right;
@@ -103,6 +103,9 @@ how to check if a point is within a convex shape
     }
     //std::cout << p_name << " Hit Box: " << hit_location << std::endl;
     swapBox(opponent, hit_location);
+
+    std::cout << p_name << ": " << p_score << std::endl;
+
     return;
 }
 
@@ -116,12 +119,14 @@ void Player::swapBox(Player *opponent, size_t hit_location) {
 
 void Player::addBox(sf::RectangleShape box, size_t y_location) {
     p_grid.addBox(box, y_location);
+    p_score++;
 }
 
 sf::RectangleShape Player::removeBox(size_t hit_location) {
+    p_score--;
     return p_grid.removeBox(hit_location);
 }
 
-/*sf::Text Player::getScore() {
-    Returns a printable score for the player
+/*sf::Text Player::getp_score() {
+    Returns a printable p_score for the player
 }*/

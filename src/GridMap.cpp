@@ -37,7 +37,7 @@ Also means that walls from p0-p1, p1-p2 and p2-p3 are stable and never change. I
     player_area.setOutlineThickness(1.f);
 
     
-    size_t num_boxes_across = player_area.getPoint((player_right) ? 0 : 1).x/BOX_SIZE;
+    size_t num_boxes_across = player_area.getPoint(1).x/BOX_SIZE;
     size_t num_boxes_down = player_area.getPoint(2).y/BOX_SIZE;
     float x=0, y=0;
 //Load grid
@@ -63,7 +63,7 @@ Also means that walls from p0-p1, p1-p2 and p2-p3 are stable and never change. I
 }
 
 int GridMap::getNumBoxes() {
-    return (int) boxes.size() + boxes[1].size();
+    return (int) boxes.size() * boxes[1].size();
 }
 
 bool GridMap::hitTopBottom(sf::CircleShape ball) {
@@ -74,6 +74,7 @@ bool GridMap::hitTopBottom(sf::CircleShape ball) {
 
 bool GridMap::hitHomeEdge(sf::CircleShape ball) {
     // Instead of bouncing the ball is reset with a time penalty?
+    // Also somehow affects scoring?
     sf::Vector2f point = ball.getPosition();
     sf::Vector2f p1 = player_area.getPoint(0);
     if (p_right) {

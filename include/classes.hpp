@@ -74,7 +74,7 @@ public:
     void addBox(sf::RectangleShape box, size_t y_location);
 
 private:
-    int score = 0;
+    int p_score = 0;
     Paddle p_paddle;
     Ball p_ball;
     GridMap p_grid;
